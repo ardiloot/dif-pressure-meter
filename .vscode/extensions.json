@@ -1,0 +1,6 @@
+{
+	"recommendations": [
+        "esphome.esphome-vscode",
+        "github.vscode-pull-request-github"
+    ]
+}

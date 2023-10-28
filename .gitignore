@@ -1,2 +1,6 @@
 *.zip
+*.env
 dif-pressure-meter-backups/
+.esphome/
+venv/
+secrets.yaml
