@@ -7,7 +7,7 @@
   (title_block
     (title "Differential pressure meter")
     (date "2023-10-06")
-    (rev "1.0")
+    (rev "1.1")
   )
 
   (lib_symbols
@@ -3761,6 +3761,10 @@
     (effects (font (size 1.27 1.27) (thickness 0.254) bold) (justify left bottom))
     (uuid c34127ae-d800-40e1-b763-3f93216dc047)
   )
+  (text "1.3mA per LED" (at 355.6 57.15 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid c596a0b4-2a50-4986-a72c-4996e94e1bfb)
+  )
 
   (label "GPIO26" (at 347.98 71.12 0) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify left bottom))
@@ -4598,7 +4602,7 @@
     (property "Reference" "R23" (at 361.95 168.91 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "2.2" (at 361.95 171.45 0)
+    (property "Value" "2.2k" (at 361.95 171.45 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" (at 357.632 170.18 90)
@@ -4841,7 +4845,7 @@
     (property "Reference" "R24" (at 361.95 189.23 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "2.2" (at 361.95 191.77 0)
+    (property "Value" "2.2k" (at 361.95 191.77 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" (at 357.632 190.5 90)

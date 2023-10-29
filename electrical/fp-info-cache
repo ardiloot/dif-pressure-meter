@@ -1,4 +1,4 @@
-22219018617124737
+22224111293437371
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -91875,6 +91875,13 @@ varistor
 2
 2
 footprints
+DIO_BZT52C6V2_RHG
+
+
+0
+2
+2
+footprints
 ESP32-WROOM-32E
 ESP32-WROOM-32E and ESP32-WROOM-32UE: https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32e_esp32-wroom-32ue_datasheet_en.pdf
 ESP32
@@ -91917,9 +91924,23 @@ SOP127P600X175-9N
 9
 9
 footprints
+SPKR_PKLCS1212E40A1-R1
+
+
+0
+2
+2
+footprints
 SWITCH_5WAY_8x8
 
 
 0
 30
 12
+footprints
+XDCR_PS1240P02BT
+
+
+0
+2
+2
