@@ -4,3 +4,4 @@ dif-pressure-meter-backups/
 .esphome/
 venv/
 secrets.yaml
+*.pyc
