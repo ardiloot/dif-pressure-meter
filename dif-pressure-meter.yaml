@@ -1,5 +1,14 @@
 esphome:
   name: dif-pressure-meter
+  on_boot:
+    priority: 600
+    then:
+      - lambda: |-
+          ESP_LOGI("boot", "boot");
+          id(gpio_keys_bl).set_level(0.2f); // Dim keys backlight
+
+external_components:
+  - source: components
 
 esp32:
   board: esp32dev
@@ -8,41 +17,241 @@ esp32:
 
 # Enable logging
 logger:
-  # baud_rate: 0
+  baud_rate: 0
 
-# api:
-
-# ota:
-#   password: !secret ota_password
-
-# wifi:
-#   ssid: !secret wifi_ssid
-#   password: !secret wifi_password
+i2c:
 
 debug:
   update_interval: 2s
 
+flow_meter:
+  id: flow_meter_id
+  valves:
+    - name: NE
+      sizes:
+        - size: "100"
+          s: [2.0, 4.0, 6.0, 9.0, 12.0]
+          k: [0.8, 1.4, 2.1, 3.0, 4.0]
+        - size: "125"
+          s: [3.0, 5.0, 7.0, 9.0, 12.0, 15.0]
+          k: [1.4, 2.3, 3.2, 4.1, 5.4, 6.7]
+    - name: KSO
+      sizes:
+        - size: "100"
+          s: [-15.0, -12.0, -10.0, -5.0, 0.0, 5.0, 10.0]
+          k: [0.5, 0.8, 1.0, 1.4, 1.9, 2.3, 2.8]
+        - size: "125"
+          s: [-10.0, -5.0, 0.0, 5.0, 10.0]
+          k: [1.5, 2.1, 2.7, 3.3, 4.0]
+        - size: "160"
+          s: [-10.0, -5.0, 0.0, 5.0, 10.0, 15.0]
+          k: [2.0, 2.8, 3.6, 4.4, 5.3, 6.2]
+    - name: CLIK100
+      sizes:
+        - size: "100"
+          s: [0.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 12.0]
+          k: [3.6, 3.1, 2.9, 2.6, 2.4, 2.2, 1.9, 1.7, 0.7]
+    - name: RK-PK
+      sizes:
+        - size: "100"
+          s: [5.0, 10.0, 15.0, 20.0, 25.0]
+          k: [1.72, 2.64, 3.32, 3.94, 4.58]
+    - name: SP-DVP
+      sizes:
+        - size: "100"
+          s: [-3.0, 0.0, 3.0, 6.0, 9.0, 12.0]
+          k: [0.48, 1.20, 2.12, 3.03, 3.88, 4.43]
+        - size: "125"
+          s: [-9.0, -6.0, -3.0, 0.0, 3.0, 6.0, 9.0, 12.0]
+          k: [1.04, 1.53, 2.18, 3.00, 4.02, 5.06, 6.18, 7.12]
+        - size: "160"
+          s: [-10.0, -5.0, 0.0, 5.0, 10.0, 15.0]
+          k: [2.0, 2.8, 3.6, 4.4, 5.3, 6.2]
+    - name: VT-DVS
+      sizes:
+        - size: "100"
+          s: [-9.0, -6.0, -3.0, 0.0, 3.0, 6.0, 9.0, 12.0]
+          k: [0.43, 0.85, 1.37, 1.89, 2.46, 3.13, 4.01, 4.56]
+        - size: "125"
+          s: [-12.0, -9.0, -6.0, -3.0, 0.0, 3.0, 6.0]
+          k: [1.63, 2.27, 2.80, 3.26, 4.05, 4.94, 5.76]
+        - size: "160"
+          s: [-20.0, -15.0, -10.0, -5.0, 0.0, 5.0, 10.0, 15.0, 20.0]
+          k: [1.86, 3.06, 4.95, 6.55, 7.69, 9.73, 11.48, 13.71, 16.85]
+
 sensor:
+  - platform: flow_meter
+    pressure_avg:
+      id: pressure_avg
+    pressure_error:
+      id: pressure_error
+    flow:
+      id: flow_instant
+    flow_avg:
+      id: flow_avg
+    flow_error:
+      id: flow_error
+
   - platform: debug
     loop_time:
       id: loop_time
       name: "Loop Time"
 
-  - platform: uptime
-    id: uptime_sensor
-    name: Uptime Sensor
-    update_interval: 0.1s
+  - platform: adc
+    id: battery_voltage
+    pin: GPIO34
     accuracy_decimals: 2
+    update_interval: 1s
+    attenuation: 11dB
+    filters:
+      - multiply: 2.0  # The voltage divider requires us to multiply by 2
+      - exponential_moving_average:
+          alpha: 0.1
+          send_every: 15
+          send_first_at: 1
+
+  - platform: sdp3x
+    id: dif_pressure
+    update_interval: 0.2s
+    address: 0x25
+    filters:
+      - multiply: 100 # Convert to Pascals
+    unit_of_measurement: Pa
+    on_value: 
+      then:
+        - lambda: id(flow_meter_id)->update(x);
+
+select:
+  - platform: template
+    id: select_edit_field
+    optimistic: true
+    options:
+      - valve_type
+      - valve_size
+      - valve_setting
+
+binary_sensor:
+  - platform: gpio
+    id: button_center
+    pin:
+      number: GPIO16
+      mode:
+        input: true
+        pullup: False
+      inverted: true
+    on_release:
+      then:
+        - lambda: |-
+            id(flow_meter_id).goto_next_state();
+    on_multi_click:
+    - timing:
+        - ON for at least 3s
+      then:
+        - logger.log: "power off"
+        - output.turn_on: fast_off
+
+  - platform: gpio
+    id: button_left
+    pin:
+      number: GPIO33
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    on_press:
+      then:
+        - select.previous: select_edit_field
+
+  - platform: gpio
+    id: button_right
+    pin:
+      number: GPIO19
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    on_press:
+      then:
+        - select.next: select_edit_field
+
+  - platform: gpio
+    id: button_up
+    pin:
+      number: GPIO17
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    on_press:
+      then:
+        - lambda: |-
+            const std::string edit_field = id(select_edit_field).state;
+            if (edit_field == "valve_type") {
+              id(flow_meter_id)->previous_valve_type();
+            } else if (edit_field == "valve_size") {
+              id(flow_meter_id)->previous_valve_size();
+            } else if (edit_field == "valve_setting") {
+              if (!id(flow_meter_id)->previous_valve_setting()) {
+                id(rtttl_id).play("short:d=4,o=5,b=100:16e6");
+              }
+            }
+
+  - platform: gpio
+    id: button_down
+    pin:
+      number: GPIO32
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    on_press:
+      then:
+        - lambda: |-
+            const std::string edit_field = id(select_edit_field).state;
+            if (edit_field == "valve_type") {
+              id(flow_meter_id)->next_valve_type();
+            } else if (edit_field == "valve_size") {
+              id(flow_meter_id)->next_valve_size();
+            } else if (edit_field == "valve_setting") {
+              if (!id(flow_meter_id)->next_valve_setting()) {
+                id(rtttl_id).play("short:d=4,o=5,b=100:16e6");
+              }
+            }
+
+switch:
+  - platform: gpio
+    id: gpio_screen_bl # Does not to seem to change sreen backlight level
+    pin: GPIO27
+    restore_mode: ALWAYS_OFF
+
+output:
+  - platform: ledc
+    pin: GPIO13
+    id: rtttl_out
+
+  - platform: ledc
+    pin: GPIO26
+    id: gpio_keys_bl
+
+  - platform: gpio
+    id: fast_off
+    pin:
+      number: GPIO25
+      mode: OUTPUT_OPEN_DRAIN
+    inverted: true
+
+rtttl:
+  id: rtttl_id
+  output: rtttl_out
 
 spi:
   clk_pin: GPIO18
   mosi_pin: GPIO23
   interface: hardware
 
-# Example configuration entry
 display:
   - platform: st7735
-    id: my_display
+    id: display_id
     model: "INITR_18BLACKTAB"
     reset_pin: GPIO4
     cs_pin: GPIO5
@@ -52,56 +261,118 @@ display:
     device_height: 160
     col_start: 0
     row_start: 0
-    eight_bit_color: true
-    update_interval: 0.25s
-    data_rate: 80MHz
+    eight_bit_color: false # false is faster
+    update_interval: 100ms
+    data_rate: 40MHz
 
     pages:
       - id: page1
         lambda: |-
-          // Draw the graph at position [x=10,y=20]
-          it.print(0, 10, id(font_roboto), id(my_blue), "Hello World!");
-          it.printf(0, 30, id(font_roboto), "Uptime: %.2f s", id(uptime_sensor).state);
-          it.printf(0, 50, id(font_roboto), id(my_red), "Loop: %.1f ms", id(loop_time).state);
-      - id: page2
-        lambda: |-
-          it.printf(0, 10, id(font_roboto), id(my_red), "Loop: %.1f ms", id(loop_time).state);
-          it.graph(10, 30, id(uptime_graph));
+          // Grid
+          for (int y : {15, 47, 80, 112, 145})
+            it.horizontal_line(0, y, it.get_width(), id(color_grid));
+          it.vertical_line(it.get_width() / 2, 15, 32, id(color_grid));
+          it.vertical_line(it.get_width() / 2, 47, 32, id(color_grid));
 
-interval:
-  - interval: 5s
-    then:
-      - display.page.show_next: my_display
-      - component.update: my_display
+          // Valve type
+          {
+            auto active_valve_type = id(flow_meter_id)->active_valve_type_name().c_str();
+            auto title_color = id(select_edit_field).state == "valve_type" ? id(color_active_field) : id(color_white);
+            it.print(it.get_width() / 2, 0, id(font_valve), title_color, TextAlign::TOP_CENTER, active_valve_type);
+          }
 
-graph:
-  # Show bare-minimum auto-ranged graph
-  - id: uptime_graph
-    duration: 5min
-    width: 108
-    height: 51
-    x_grid: 1min
-    traces:
-      - sensor: uptime_sensor
-        line_type: SOLID
-        line_thickness: 4
-        color: my_red
+          // Valve size
+          {
+            auto active_valve_size = id(flow_meter_id)->active_valve_size().c_str();
+            auto title_color = id(select_edit_field).state == "valve_size" ? id(color_active_field) : id(color_white);
+            it.print(it.get_width() / 4, 15, id(font_title), title_color, TextAlign::TOP_CENTER, "SIZE");
+            it.print(it.get_width() / 4, 47 - 3, id(font_value), id(color_white), TextAlign::BASELINE_CENTER, active_valve_size);
+          }
+
+          // Valve setting
+          {
+            const float setting = id(flow_meter_id)->active_valve_setting();
+            auto title_color = id(select_edit_field).state == "valve_setting" ? id(color_active_field) : id(color_white);
+            it.print(it.get_width() * 3 / 4, 15, id(font_title), title_color, TextAlign::TOP_CENTER, "SETTING");
+            it.printf(it.get_width() * 3 / 4, 47 - 3, id(font_value), id(color_white), TextAlign::BASELINE_CENTER, "%.1f", setting);
+          }
+          
+          // Instant values
+          {
+            const float value = id(dif_pressure).state;
+            it.print(it.get_width() / 4, 47, id(font_title), id(color_white), TextAlign::TOP_CENTER, "PRESSURE Pa");
+            it.printf(it.get_width() / 4, 80 - 3, id(font_value), id(color_white), TextAlign::BASELINE_CENTER, "%.1f", value);
+          }
+
+          {
+            const float value = id(flow_instant).state;
+            it.print(it.get_width() * 3 / 4, 47, id(font_title), id(color_white), TextAlign::TOP_CENTER, "FLOW L/S");
+            it.printf(it.get_width() * 3 / 4, 80 - 3, id(font_value), id(color_white), TextAlign::BASELINE_CENTER, "%.1f", value);
+          }
+
+          // Average values
+          const auto state = id(flow_meter_id)->get_state();
+          const auto sample_count = id(flow_meter_id).get_sample_count();
+          const auto avg_value_color = 
+              state == flow_meter::State::AVERAGING ? id(color_averaging) : 
+              state == flow_meter::State::STOPPED ? id(color_stopped) : 
+              id(color_white);
+          const bool has_average = state != flow_meter::State::IDLE && sample_count >= 2;
+          {
+            const float avg = id(pressure_avg).state;
+            const float error = id(pressure_error).state;
+            it.print(it.get_width() / 2, 80, id(font_title), id(color_white), TextAlign::TOP_CENTER, "AVG PRESSURE Pa");
+            if (!has_average) {
+              it.print(it.get_width() / 2, 112 - 3, id(font_value), avg_value_color, TextAlign::BASELINE_CENTER, "---");
+            } else {
+              it.printf(it.get_width() / 2, 112 - 3, id(font_value), avg_value_color, TextAlign::BASELINE_CENTER, "%.1f±%.1f", avg, error);
+            }
+          }
+        
+          {
+            const float avg = id(flow_avg).state;
+            const float error = id(flow_error).state;
+            it.print(it.get_width() / 2, 112, id(font_title), id(color_white), TextAlign::TOP_CENTER, "AVG FLOW L/S");
+            if (!has_average) {
+              it.print(it.get_width() / 2, 145 - 3, id(font_value), avg_value_color, TextAlign::BASELINE_CENTER, "---");
+            } else {
+              it.printf(it.get_width() / 2, 145 - 3, id(font_value), avg_value_color, TextAlign::BASELINE_CENTER, "%.1f±%.1f", avg, error);
+            }
+          }
+
+          // Debug
+          const float battery_percentage = 1e2f * std::min(1.0f, std::max(0.0f, (id(battery_voltage).state - 3.7f) / (4.2f - 3.7f)));
+          it.printf(it.get_width() / 2, 160, id(font_valve), id(color_white), TextAlign::BOTTOM_CENTER, "%.0fms, N=%d, %.0f%%",
+            id(loop_time).state,
+            sample_count,
+            battery_percentage
+          );
+
+font:
+  - file: "gfonts://Open+Sans"
+    id: font_title
+    size: 9
+
+  - file: "gfonts://Open+Sans"
+    id: font_valve
+    size: 10
+
+  - file:
+      type: gfonts
+      family: Open+Sans
+      weight: semi-bold
+    id: font_value
+    size: 20
+    glyphs: "!\"%()+=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz±?"
 
 color:
-  - id: my_blue
-    blue: 100%
-  - id: my_red
-    red: 100%
-  - id: my_green
-    green: 100%
-  - id: my_white
-    red: 100%
-    blue: 100%
-    green: 100%
-  # - id: my_yellow
-  #   hex: ffff00
-    
-font:
-  - file: "gfonts://Roboto"
-    id: font_roboto
-    size: 15
+  - id: color_grid
+    hex: "6eb1f5"
+  - id: color_active_field
+    hex: "a134eb"
+  - id: color_averaging
+    hex: "59944e"
+  - id: color_stopped
+    hex: "c92508"
+  - id: color_white
+    hex: ffffff
