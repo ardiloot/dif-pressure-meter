@@ -1,5 +1,16 @@
 ## Differential pressure and flow sensor
 
+| **Front**                         | **Back**                         | **Opened**                       |
+|-----------------------------------|----------------------------------|----------------------------------|
+| ![](imgs/dpm-power-on-600.png)    | ![](imgs/dpm-power-off-600.png)  | ![](imgs/case-opened-600.png)    |
+
+# Electrical
+
+| **Front**                         | **Back**                         |
+|-----------------------------------|----------------------------------|
+| ![](imgs/pcb-model-front-600.png) | ![](imgs/pcb-model-back-600.png) |
+| ![](imgs/pcb-front-600.png)       | ![](imgs/pcb-back-600.png)       |
+
 ## Installing firmware
 
 1. Download latest firmware (`.bin` file) from [releases page](https://github.com/ardiloot/dif-pressure-meter/releases/).
