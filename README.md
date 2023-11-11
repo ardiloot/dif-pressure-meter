@@ -2,7 +2,7 @@
 
 ## Mechanical
 
-| **Front**                         | **Back**                         | **Opened**                       |
+| **Powered on**                    | **Powered off**                  | **Case opened**                  |
 |-----------------------------------|----------------------------------|----------------------------------|
 | ![](imgs/dpm-power-on-600.png)    | ![](imgs/dpm-power-off-600.png)  | ![](imgs/case-opened-600.png)    |
 
