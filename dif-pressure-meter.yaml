@@ -1,3 +1,4 @@
+---
 esphome:
   name: dif-pressure-meter
   on_boot:
@@ -104,7 +105,7 @@ sensor:
     update_interval: 1s
     attenuation: 11dB
     filters:
-      - multiply: 2.0  # The voltage divider requires us to multiply by 2
+      - multiply: 2.0 # The voltage divider requires us to multiply by 2
       - exponential_moving_average:
           alpha: 0.1
           send_every: 15
@@ -117,7 +118,7 @@ sensor:
     filters:
       - multiply: 100 # Convert to Pascals
     unit_of_measurement: Pa
-    on_value: 
+    on_value:
       then:
         - lambda: id(flow_meter_id)->update(x);
 
@@ -144,11 +145,11 @@ binary_sensor:
         - lambda: |-
             id(flow_meter_id).goto_next_state();
     on_multi_click:
-    - timing:
-        - ON for at least 3s
-      then:
-        - logger.log: "power off"
-        - output.turn_on: fast_off
+      - timing:
+          - ON for at least 3s
+        then:
+          - logger.log: "power off"
+          - output.turn_on: fast_off
 
   - platform: gpio
     id: button_left
@@ -285,29 +286,38 @@ display:
           {
             auto active_valve_size = id(flow_meter_id)->active_valve_size().c_str();
             auto title_color = id(select_edit_field).state == "valve_size" ? id(color_active_field) : id(color_white);
-            it.print(it.get_width() / 4, 15, id(font_title), title_color, TextAlign::TOP_CENTER, "SIZE");
-            it.print(it.get_width() / 4, 47 - 3, id(font_value), id(color_white), TextAlign::BASELINE_CENTER, active_valve_size);
+            it.print(it.get_width() / 4, 15, id(font_title), title_color,
+              TextAlign::TOP_CENTER, "SIZE");
+            it.print(it.get_width() / 4, 47 - 3, id(font_value), id(color_white),
+              TextAlign::BASELINE_CENTER,active_valve_size);
           }
 
           // Valve setting
           {
             const float setting = id(flow_meter_id)->active_valve_setting();
-            auto title_color = id(select_edit_field).state == "valve_setting" ? id(color_active_field) : id(color_white);
-            it.print(it.get_width() * 3 / 4, 15, id(font_title), title_color, TextAlign::TOP_CENTER, "SETTING");
-            it.printf(it.get_width() * 3 / 4, 47 - 3, id(font_value), id(color_white), TextAlign::BASELINE_CENTER, "%.1f", setting);
+            auto title_color = id(select_edit_field).state == "valve_setting"
+              ? id(color_active_field) : id(color_white);
+            it.print(it.get_width() * 3 / 4, 15, id(font_title), title_color,
+              TextAlign::TOP_CENTER, "SETTING");
+            it.printf(it.get_width() * 3 / 4, 47 - 3, id(font_value), id(color_white),
+              TextAlign::BASELINE_CENTER, "%.1f", setting);
           }
-          
+
           // Instant values
           {
             const float value = id(dif_pressure).state;
-            it.print(it.get_width() / 4, 47, id(font_title), id(color_white), TextAlign::TOP_CENTER, "PRESSURE Pa");
-            it.printf(it.get_width() / 4, 80 - 3, id(font_value), id(color_white), TextAlign::BASELINE_CENTER, "%.1f", value);
+            it.print(it.get_width() / 4, 47, id(font_title), id(color_white),
+              TextAlign::TOP_CENTER, "PRESSURE Pa");
+            it.printf(it.get_width() / 4, 80 - 3, id(font_value), id(color_white),
+              TextAlign::BASELINE_CENTER, "%.1f", value);
           }
 
           {
             const float value = id(flow_instant).state;
-            it.print(it.get_width() * 3 / 4, 47, id(font_title), id(color_white), TextAlign::TOP_CENTER, "FLOW L/S");
-            it.printf(it.get_width() * 3 / 4, 80 - 3, id(font_value), id(color_white), TextAlign::BASELINE_CENTER, "%.1f", value);
+            it.print(it.get_width() * 3 / 4, 47, id(font_title), id(color_white),
+              TextAlign::TOP_CENTER, "FLOW L/S");
+            it.printf(it.get_width() * 3 / 4, 80 - 3, id(font_value), id(color_white),
+              TextAlign::BASELINE_CENTER, "%.1f", value);
           }
 
           // Average values
@@ -321,28 +331,36 @@ display:
           {
             const float avg = id(pressure_avg).state;
             const float error = id(pressure_error).state;
-            it.print(it.get_width() / 2, 80, id(font_title), id(color_white), TextAlign::TOP_CENTER, "AVG PRESSURE Pa");
+            it.print(it.get_width() / 2, 80, id(font_title), id(color_white),
+              TextAlign::TOP_CENTER, "AVG PRESSURE Pa");
             if (!has_average) {
-              it.print(it.get_width() / 2, 112 - 3, id(font_value), avg_value_color, TextAlign::BASELINE_CENTER, "---");
+              it.print(it.get_width() / 2, 112 - 3, id(font_value), avg_value_color,
+                TextAlign::BASELINE_CENTER, "---");
             } else {
-              it.printf(it.get_width() / 2, 112 - 3, id(font_value), avg_value_color, TextAlign::BASELINE_CENTER, "%.1f±%.1f", avg, error);
+              it.printf(it.get_width() / 2, 112 - 3, id(font_value), avg_value_color,
+                TextAlign::BASELINE_CENTER, "%.1f±%.1f", avg, error);
             }
           }
-        
+
           {
             const float avg = id(flow_avg).state;
             const float error = id(flow_error).state;
-            it.print(it.get_width() / 2, 112, id(font_title), id(color_white), TextAlign::TOP_CENTER, "AVG FLOW L/S");
+            it.print(it.get_width() / 2, 112, id(font_title), id(color_white),
+              TextAlign::TOP_CENTER, "AVG FLOW L/S");
             if (!has_average) {
-              it.print(it.get_width() / 2, 145 - 3, id(font_value), avg_value_color, TextAlign::BASELINE_CENTER, "---");
+              it.print(it.get_width() / 2, 145 - 3, id(font_value), avg_value_color,
+                TextAlign::BASELINE_CENTER, "---");
             } else {
-              it.printf(it.get_width() / 2, 145 - 3, id(font_value), avg_value_color, TextAlign::BASELINE_CENTER, "%.1f±%.1f", avg, error);
+              it.printf(it.get_width() / 2, 145 - 3, id(font_value), avg_value_color,
+                TextAlign::BASELINE_CENTER, "%.1f±%.1f", avg, error);
             }
           }
 
           // Debug
-          const float battery_percentage = 1e2f * std::min(1.0f, std::max(0.0f, (id(battery_voltage).state - 3.7f) / (4.2f - 3.7f)));
-          it.printf(it.get_width() / 2, 160, id(font_valve), id(color_white), TextAlign::BOTTOM_CENTER, "%.0fms, N=%d, %.0f%%",
+          const float battery_percentage = 1e2f * std::min(1.0f,
+            std::max(0.0f, (id(battery_voltage).state - 3.7f) / (4.2f - 3.7f)));
+          it.printf(it.get_width() / 2, 160, id(font_valve), id(color_white),
+            TextAlign::BOTTOM_CENTER, "%.0fms, N=%d, %.0f%%",
             id(loop_time).state,
             sample_count,
             battery_percentage
@@ -363,7 +381,7 @@ font:
       weight: semi-bold
     id: font_value
     size: 20
-    glyphs: "!\"%()+=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz±?"
+    glyphs: '!"%()+=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz±?'
 
 color:
   - id: color_grid
