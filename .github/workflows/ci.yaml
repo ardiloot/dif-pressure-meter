@@ -61,5 +61,6 @@ jobs:
 
       - name: "Upload"
         uses: actions/upload-artifact@v3
+        with:
           name: dif-pressure-meter
           path: dist
