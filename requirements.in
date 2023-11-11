@@ -1,3 +1,5 @@
 esphome
 pillow==10.0.1
 pip-tools
+yamllint
+pylint
