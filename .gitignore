@@ -5,3 +5,5 @@ dif-pressure-meter-backups/
 venv/
 secrets.yaml
 *.pyc
+imgs/original/
+resize.py
