@@ -1,0 +1,44 @@
+---
+name: CI
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run yamllint
+        run: |
+          yamllint $(git ls-files '*.yaml')
+
+      - name: Run pylint
+        run: |
+          pylint $(git ls-files '*.py')
+
+      - name: Run clang-format
+        run: |
+          clang-format-13 --dry-run --Werror $(git ls-files '*.cpp' '*.h')
+
+      - name: Compile
+        run: |
+          esphome compile dif-pressure-meter.yaml
