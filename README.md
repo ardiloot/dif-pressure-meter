@@ -3,7 +3,7 @@
 
 # Development setup
 
-Create virtual environment, activate and install requirements:
+Create virtual environment (Python 3.11), activate and install requirements:
 
 ```bash
 python -m venv venv
