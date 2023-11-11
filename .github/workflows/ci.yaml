@@ -5,6 +5,7 @@ name: CI
 on:
   push:
   pull_request:
+  release:
 
 jobs:
   ci:
@@ -14,8 +15,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.11"]
-    outputs:
-      esphome-version: ${{ steps.esphome-build.outputs.esphome-version }}
 
     steps:
       - uses: actions/checkout@v3
@@ -55,9 +54,10 @@ jobs:
 
       - name: "Move files"
         run: |
+          echo #
           mkdir dist
           mv .esphome/build/dif-pressure-meter/.pioenvs/dif-pressure-meter/firmware-factory.bin \
-            dist/dif-pressure-meter.bin
+            dist/dif-pressure-meter-${{github.ref_name}}.bin
 
       - name: "Upload"
         uses: actions/upload-artifact@v3
@@ -65,8 +65,10 @@ jobs:
           name: dif-pressure-meter
           path: dist
 
-      - name: "Upload"
-        uses: actions/upload-artifact@v3
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: dif-pressure-meter.bin
-          path: dist/dif-pressure-meter.bin
+          generate_release_notes: True
+          files: |
+            dist/*.bin
