@@ -14,6 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.11"]
+    outputs:
+      esphome-version: ${{ steps.esphome-build.outputs.esphome-version }}
 
     steps:
       - uses: actions/checkout@v3
@@ -50,3 +52,21 @@ jobs:
       - name: Compile
         run: |
           esphome compile dif-pressure-meter.yaml
+
+      - name: Official build action
+        uses: esphome/build-action@v1.5.2
+        id: esphome-build
+        with:
+          yaml_file: dif-pressure-meter.yaml
+          version: "2023.10.6"
+
+      - name: "Move files"
+        run: |
+          mkdir output
+          mv "${{ steps.esphome-build.outputs.name }}" output/
+
+      - name: "Upload"
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: dif-pressure-meter
+          path: output
