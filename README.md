@@ -8,14 +8,14 @@
 
 # Electrical
 
-| **Front**                         | **Back**                         |
-|-----------------------------------|----------------------------------|
-| ![](imgs/pcb-model-front-600.png) | ![](imgs/pcb-model-back-600.png) |
-| ![](imgs/pcb-front-600.png)       | ![](imgs/pcb-back-600.png)       |
+| **Front**                                             | **Back**                                              |
+|-------------------------------------------------------|-------------------------------------------------------|
+| <img src="imgs/pcb-model-front-600.png" height="400"> | <img src="imgs/pcb-model-back-600.png" height="400">  |
+| <img src="imgs/pcb-front-600.png" height="400">       | <img src="imgs/pcb-back-600.png" height="400">       |
 
 ## Installing firmware
 
-1. Download latest firmware (`.bin` file) from [releases page](https://github.com/ardiloot/dif-pressure-meter/releases/).
+1. Download latest firmware (`.bin` file) from [releases page](https://**github**.com/ardiloot/dif-pressure-meter/releases/).
 2. Connect with USB cable
 3. Use https://web.esphome.io/ to prepare device for the first use and to flash the firmware
 
