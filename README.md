@@ -1,4 +1,6 @@
-## Differential pressure and flow sensor
+# Differential pressure and flow sensor
+
+## Mechanical
 
 | **Front**                         | **Back**                         | **Opened**                       |
 |-----------------------------------|----------------------------------|----------------------------------|
