@@ -13,11 +13,9 @@ For example, Flakt Group air valves have nice illustrations :
 Source: [KSO air valve product page](https://www.flaktgroup.com/en/products/air-management-atds/air-valves/exhaust-air-valves/kso-exhaust-air-valve/)
 
 
-However, it is hard to find measurement equipment for such small pressures (±50 Pa). There are expensive professional options (e.g Fluke 922), but they cost around quite a bit.
+However, it is hard to find measurement equipment for such small pressures (±50 Pa). There are some professional options (e.g Fluke 922), but they cost around quite a bit.
 
-Here, as an alternative, DIY differential pressure meter is built. It is based on [Sensirion SDP810-500Pa](https://www.sensirion.com/products/catalog/SDP810-500Pa) differential pressure sensor (measurement range ±500 Pa, zero point accuracy 0.1 Pa). As a brain, ESP32-WROOM-32E chip is used. Firmware is mainly based on [ESPHome](https://esphome.io/).
-
-
+Here, as an alternative, DIY handheld battery-powered differential pressure meter is built. It is based on [Sensirion SDP810-500Pa](https://www.sensirion.com/products/catalog/SDP810-500Pa) differential pressure sensor (measurement range ±500 Pa, zero point accuracy 0.1 Pa). As a brain, ESP32-WROOM-32E chip is used. Firmware is mainly based on [ESPHome](https://esphome.io/).
 
 # Electrical
 
