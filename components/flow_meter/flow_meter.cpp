@@ -11,14 +11,14 @@ Valve::Valve(const std::string &size, const std::vector<float> &s, const std::ve
 bool Valve::next_valve_setting() {
   if (setting_ >= s_.back())
     return false;
-  setting_ = std::min(s_.back(), setting_ + 0.5f);
+  setting_ = std::min(s_.back(), setting_ + 1.0f);
   return true;
 }
 
 bool Valve::previous_valve_setting() {
   if (setting_ <= s_.front())
     return false;
-  setting_ = std::max(s_.front(), setting_ - 0.5f);
+  setting_ = std::max(s_.front(), setting_ - 1.0f);
   return true;
 }
 
