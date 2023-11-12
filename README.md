@@ -4,7 +4,7 @@ To measure and adjust air flow in air valves, diffusers or grilles accurate meas
 
 $$q = k \cdot \sqrt{Δp}$$
 
-where $q$ is flow (`L/s`), $Δp$ is measured pressure drop (`Pa`) and $k$ is the flow coefficient (k-factor) that can be found in the datasheet of the air valve (depends on the valve setting).
+where $q$ is flow (L/s), $Δp$ is measured pressure drop (Pa) and $k$ is the flow coefficient (k-factor) that can be found in the datasheet of the air valve (depends on the valve setting).
 
 For example, Flakt Group air valves have nice illustrations :
 
@@ -18,18 +18,33 @@ However, it is hard to find measurement equipment for such small pressures (±50
 Here, as an alternative, DIY differential pressure meter is built. It is based on [Sensirion SDP810-500Pa](https://www.sensirion.com/products/catalog/SDP810-500Pa) differential pressure sensor (measurement range ±500 Pa, zero point accuracy 0.1 Pa). As a brain, ESP32-WROOM-32E chip is used. Firmware is mainly based on [ESPHome](https://esphome.io/).
 
 
+
+# Electrical
+
+[Electrical design](electrical/) is made using KiCad 7.0 software. The main components are:
+1. ESP32-WROOM-32E + USB to UART converter (`CH340C`)  - main compute
+2. Sensirion SDP810-500Pa - I2C differential pressure sensor
+3. 1.8" LCD ST7735S - screen
+4. PKLCS1212E40A1-R1 - Buzzer for making sounds
+5. 5 way buttons for navigation
+6. Battery charging management (`TP4056`)
+
+For details see:
+* [Schematic](electrical/schematic.pdf)
+* [Bill of materials (BOM)](electrical/bom.pdf)
+* [Gerber manufacturing files for JLCPCB](electrical/gerbers/)
+
+| **Front**                                                         | **Back**                                                          |
+|-------------------------------------------------------------------|-------------------------------------------------------------------|
+| <img src="imgs/pcb-model-front-600.png" height="75%" width="75%"> | <img src="imgs/pcb-model-back-600.png" height="75%" width="75%">  |
+| <img src="imgs/pcb-front-600.png" height="75%" width="75%">       | <img src="imgs/pcb-back-600.png" height="75%" width="75%">        |
+
 ## Mechanical
 
 | **Powered on**                    | **Powered off**                  | **Case opened**                  |
 |-----------------------------------|----------------------------------|----------------------------------|
 | ![](imgs/dpm-power-on-600.png)    | ![](imgs/dpm-power-off-600.png)  | ![](imgs/case-opened-600.png)    |
 
-# Electrical
-
-| **Front**                                                         | **Back**                                                          |
-|-------------------------------------------------------------------|-------------------------------------------------------------------|
-| <img src="imgs/pcb-model-front-600.png" height="75%" width="75%"> | <img src="imgs/pcb-model-back-600.png" height="75%" width="75%">  |
-| <img src="imgs/pcb-front-600.png" height="75%" width="75%">       | <img src="imgs/pcb-back-600.png" height="75%" width="75%">        |
 
 ## Installing firmware
 
