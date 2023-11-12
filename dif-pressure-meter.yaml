@@ -263,7 +263,7 @@ display:
     col_start: 0
     row_start: 0
     eight_bit_color: false # false is faster
-    update_interval: 100ms
+    update_interval: 166ms
     data_rate: 40MHz
 
     pages:
