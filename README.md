@@ -41,6 +41,25 @@ For details see:
 
 ## Mechanical
 
+The mechanical design is done using Onshape: [project files](https://cad.onshape.com/documents/3a0444f7efaf570fd867d2e7/w/0f2dabb567175f38ff258f90/e/ec28925e598c09357985fe26?renderMode=0&uiState=655145dc99c22b680c1f923b). The case is mostly 3D printed:
+1. Front ([STL](mech/front.stl))
+2. Back ([STL](mech/front.stl))
+3. Screen spacers ([STL](mech/spacer.stl))
+4. 1 mm thick Plexiglass for screen protection (37 mm x 50 mm)
+5. M2x5 screws for screen mounting
+6. DIN912 M3x12 screws for case
+
+
+Printer parameters:
+* Printer: Ender-3 V2 (Trianglelab DDB Extruder V2.0 + BLTouch)
+* Slicer: Ultimaker Cura 4.11.0
+* Filamant: eSun PLA+ 1.75mm 1kg Black
+* Profile: Standard Quality
+* Printing temperature: 210 °C
+* Build Plate Temperature: 60 °C
+* Initial layer horizontal expansion: -0.1 mm
+* Generate support: yes
+
 | **Powered on**                    | **Powered off**                  | **Case opened**                  |
 |-----------------------------------|----------------------------------|----------------------------------|
 | ![](imgs/dpm-power-on-600.png)    | ![](imgs/dpm-power-off-600.png)  | ![](imgs/case-opened-600.png)    |
@@ -48,13 +67,18 @@ For details see:
 
 ## Installing firmware
 
+Firmware is developed using [ESPHome](https://esphome.io/) with additional custom component for calculating flow. The [configuration file](dif-pressure-meter.yaml) can be edited to include more air valve types or to make any other changes if needed
+
+To install precompiled firmware:
 1. Download latest firmware (`.bin` file) from [releases page](https://**github**.com/ardiloot/dif-pressure-meter/releases/).
 2. Connect with USB cable
 3. Use https://web.esphome.io/ to prepare device for the first use and to flash the firmware
 
 ## Development setup
 
-Create virtual environment (Python 3.11), activate and install requirements:
+This paragraph contains instructions for development of the code and can be skipped if not relevant.
+
+To begin, create virtual environment (Python 3.11), activate and install requirements:
 
 ```bash
 python -m venv venv
