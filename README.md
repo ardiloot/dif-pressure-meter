@@ -8,10 +8,10 @@
 
 # Electrical
 
-| **Front**                                             | **Back**                                              |
-|-------------------------------------------------------|-------------------------------------------------------|
-| <img src="imgs/pcb-model-front-600.png" height="400"> | <img src="imgs/pcb-model-back-600.png" height="400">  |
-| <img src="imgs/pcb-front-600.png" height="400">       | <img src="imgs/pcb-back-600.png" height="400">       |
+| **Front**                                                         | **Back**                                                          |
+|-------------------------------------------------------------------|-------------------------------------------------------------------|
+| <img src="imgs/pcb-model-front-600.png" height="75%" width="75%"> | <img src="imgs/pcb-model-back-600.png" height="75%" width="75%">  |
+| <img src="imgs/pcb-front-600.png" height="75%" width="75%">       | <img src="imgs/pcb-back-600.png" height="75%" width="75%">        |
 
 ## Installing firmware
 
