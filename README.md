@@ -1,4 +1,22 @@
-# Differential pressure and flow sensor
+# Differential pressure (and air flow) meter
+
+To measure and adjust air flow in air valves, diffusers or grilles accurate measurement of small pressure drop (differential pressure) is often required (usually in the range of -50 to 50 Pa). Pressure drop is used to calculate flow through air valve by using formula
+
+$$q = k \cdot \sqrt{Δp}$$
+
+where $q$ is flow (`L/s`), $Δp$ is measured pressure drop (`Pa`) and $k$ is the flow coefficient (k-factor) that can be found in the datasheet of the air valve (depends on the valve setting).
+
+For example, Flakt Group air valves have nice illustrations :
+
+![](imgs/flakt-kso-600.png)
+
+Source: [KSO air valve product page](https://www.flaktgroup.com/en/products/air-management-atds/air-valves/exhaust-air-valves/kso-exhaust-air-valve/)
+
+
+However, it is hard to find measurement equipment for such small pressures (±50 Pa). There are expensive professional options (e.g Fluke 922), but they cost around quite a bit.
+
+Here, as an alternative, DIY differential pressure meter is built. It is based on [Sensirion SDP810-500Pa](https://www.sensirion.com/products/catalog/SDP810-500Pa) differential pressure sensor (measurement range ±500 Pa, zero point accuracy 0.1 Pa). As a brain, ESP32-WROOM-32E chip is used. Firmware is mainly based on [ESPHome](https://esphome.io/).
+
 
 ## Mechanical
 

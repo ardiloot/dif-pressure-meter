@@ -1,7 +1,8 @@
 {
-    "python.analysis.typeCheckingMode": "basic",
-    "editor.formatOnSave": true,
-    "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
-    },
+  "python.analysis.typeCheckingMode": "basic",
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "cSpell.words": ["datasheet"]
 }
