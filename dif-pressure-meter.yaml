@@ -7,6 +7,7 @@ esphome:
       - lambda: |-
           ESP_LOGI("boot", "boot");
           id(gpio_keys_bl).set_level(0.2f); // Dim keys backlight
+      - script.execute: auto_poweroff_script
 
 external_components:
   - source: components
@@ -26,6 +27,19 @@ logger:
   baud_rate: 0
 
 i2c:
+
+script:
+  - id: auto_poweroff_script
+    mode: restart
+    then:
+      - delay: 10min
+      - logger.log: "auto power off warning"
+      - rtttl.play: "two-short:d=4,o=5,b=100:8e6,8p,8e6"
+      - delay: 1min
+      - rtttl.play: "long:d=4,o=5,b=100:1e6"
+      - delay: 1s
+      - logger.log: "auto power off"
+      - output.turn_on: fast_off
 
 debug:
   update_interval: 2s
@@ -148,6 +162,7 @@ binary_sensor:
     on_press:
       then:
         - rtttl.play: "feedback:d=4,o=5,b=100:32a4"
+        - script.execute: auto_poweroff_script
     on_release:
       then:
         - lambda: id(show_shutdown_banner) = false;
@@ -183,6 +198,7 @@ binary_sensor:
       then:
         - rtttl.play: "feedback:d=4,o=5,b=100:32a4"
         - select.previous: select_edit_field
+        - script.execute: auto_poweroff_script
 
   - platform: gpio
     id: button_right
@@ -196,6 +212,7 @@ binary_sensor:
       then:
         - rtttl.play: "feedback:d=4,o=5,b=100:32a4"
         - select.next: select_edit_field
+        - script.execute: auto_poweroff_script
 
   - platform: gpio
     id: button_up
@@ -219,6 +236,7 @@ binary_sensor:
                 id(rtttl_id).play("short:d=4,o=5,b=100:8e6");
               }
             }
+        - script.execute: auto_poweroff_script
 
   - platform: gpio
     id: button_down
@@ -242,6 +260,7 @@ binary_sensor:
                 id(rtttl_id).play("short:d=4,o=5,b=100:8e6");
               }
             }
+        - script.execute: auto_poweroff_script
 
 switch:
   - platform: gpio
