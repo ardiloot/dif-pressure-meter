@@ -240,7 +240,9 @@ binary_sensor:
             if (edit_field == "valve_type") {
               id(flow_meter_id)->previous_valve_type();
             } else if (edit_field == "valve_size") {
-              id(flow_meter_id)->previous_valve_size();
+              if (!id(flow_meter_id)->previous_valve_size()) {
+                id(rtttl_id).play("short:d=4,o=5,b=100:8e6");
+              }
             } else if (edit_field == "valve_setting") {
               if (!id(flow_meter_id)->previous_valve_setting()) {
                 id(rtttl_id).play("short:d=4,o=5,b=100:8e6");
@@ -264,7 +266,9 @@ binary_sensor:
             if (edit_field == "valve_type") {
               id(flow_meter_id)->next_valve_type();
             } else if (edit_field == "valve_size") {
-              id(flow_meter_id)->next_valve_size();
+              if (!id(flow_meter_id)->next_valve_size()) {
+                id(rtttl_id).play("short:d=4,o=5,b=100:8e6");
+              }
             } else if (edit_field == "valve_setting") {
               if (!id(flow_meter_id)->next_valve_setting()) {
                 id(rtttl_id).play("short:d=4,o=5,b=100:8e6");

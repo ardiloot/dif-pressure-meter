@@ -28,9 +28,23 @@ void ValveType::add_size(const std::string &size, const std::vector<float> &s, c
   sizes_.push_back(Valve(size, s, k));
 }
 
-void ValveType::next_valve_size() { size_index_ = size_index_ + 1 >= sizes_.size() ? 0 : size_index_ + 1; }
+bool ValveType::next_valve_size() {
+  if (size_index_ + 1 >= sizes_.size()) {
+    size_index_ = int(sizes_.size()) - 1;
+    return false;
+  }
+  size_index_++;
+  return true;
+}
 
-void ValveType::previous_valve_size() { size_index_ = size_index_ <= 0 ? sizes_.size() - 1 : size_index_ - 1; }
+bool ValveType::previous_valve_size() {
+  if (size_index_ <= 0) {
+    size_index_ = 0;
+    return false;
+  }
+  size_index_--;
+  return true;
+}
 
 void FlowMeter::loop() {}
 
@@ -118,9 +132,9 @@ void FlowMeter::previous_valve_type() {
 
 const std::string &FlowMeter::active_valve_size() const { return active_valve().get_size(); }
 
-void FlowMeter::next_valve_size() { active_valve_type().next_valve_size(); }
+bool FlowMeter::next_valve_size() { return active_valve_type().next_valve_size(); }
 
-void FlowMeter::previous_valve_size() { active_valve_type().previous_valve_size(); }
+bool FlowMeter::previous_valve_size() { return active_valve_type().previous_valve_size(); }
 
 float FlowMeter::active_valve_setting() const { return active_valve().get_setting(); }
 

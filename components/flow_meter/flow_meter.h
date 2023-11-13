@@ -63,8 +63,8 @@ class ValveType {
  public:
   void set_name(const std::string &name);
   void add_size(const std::string &size, const std::vector<float> &s, const std::vector<float> &k);
-  void next_valve_size();
-  void previous_valve_size();
+  bool next_valve_size();
+  bool previous_valve_size();
   const std::string &get_name() const { return name_; }
   const std::vector<Valve> &get_sizes() const { return sizes_; }
   std::vector<Valve> &get_sizes() { return sizes_; }
@@ -100,8 +100,8 @@ class FlowMeter : public Component {
   void previous_valve_type();
 
   const std::string &active_valve_size() const;
-  void next_valve_size();
-  void previous_valve_size();
+  bool next_valve_size();
+  bool previous_valve_size();
 
   float active_valve_setting() const;
   bool next_valve_setting();
