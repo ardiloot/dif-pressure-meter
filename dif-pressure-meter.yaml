@@ -140,11 +140,16 @@ binary_sensor:
         input: true
         pullup: False
       inverted: true
-    on_release:
+    on_press:
       then:
-        - lambda: |-
-            id(flow_meter_id).goto_next_state();
+        - rtttl.play: "feedback:d=4,o=5,b=100:32a4"
     on_multi_click:
+      - timing:
+          - ON for at most 1s
+          - OFF for at least 0.1s
+        then:
+          - lambda: |-
+              id(flow_meter_id).goto_next_state();
       - timing:
           - ON for at least 3s
         then:
@@ -161,6 +166,7 @@ binary_sensor:
       inverted: true
     on_press:
       then:
+        - rtttl.play: "feedback:d=4,o=5,b=100:32a4"
         - select.previous: select_edit_field
 
   - platform: gpio
@@ -173,6 +179,7 @@ binary_sensor:
       inverted: true
     on_press:
       then:
+        - rtttl.play: "feedback:d=4,o=5,b=100:32a4"
         - select.next: select_edit_field
 
   - platform: gpio
@@ -186,6 +193,7 @@ binary_sensor:
     on_press:
       then:
         - lambda: |-
+            id(rtttl_id).play("feedback:d=4,o=5,b=100:32a4");
             const std::string edit_field = id(select_edit_field).state;
             if (edit_field == "valve_type") {
               id(flow_meter_id)->previous_valve_type();
@@ -193,7 +201,7 @@ binary_sensor:
               id(flow_meter_id)->previous_valve_size();
             } else if (edit_field == "valve_setting") {
               if (!id(flow_meter_id)->previous_valve_setting()) {
-                id(rtttl_id).play("short:d=4,o=5,b=100:16e6");
+                id(rtttl_id).play("short:d=4,o=5,b=100:8e6");
               }
             }
 
@@ -208,6 +216,7 @@ binary_sensor:
     on_press:
       then:
         - lambda: |-
+            id(rtttl_id).play("feedback:d=4,o=5,b=100:32a4");
             const std::string edit_field = id(select_edit_field).state;
             if (edit_field == "valve_type") {
               id(flow_meter_id)->next_valve_type();
@@ -215,7 +224,7 @@ binary_sensor:
               id(flow_meter_id)->next_valve_size();
             } else if (edit_field == "valve_setting") {
               if (!id(flow_meter_id)->next_valve_setting()) {
-                id(rtttl_id).play("short:d=4,o=5,b=100:16e6");
+                id(rtttl_id).play("short:d=4,o=5,b=100:8e6");
               }
             }
 
