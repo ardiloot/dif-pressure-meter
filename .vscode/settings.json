@@ -4,5 +4,5 @@
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
-  "cSpell.words": ["datasheet"]
+  "cSpell.words": ["datasheet", "poweroff"]
 }
