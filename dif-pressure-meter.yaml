@@ -129,6 +129,13 @@ sensor:
           alpha: 0.1
           send_every: 15
           send_first_at: 1
+    on_value_range:
+      - below: 3.75
+        then:
+          - rtttl.play: "long:d=4,o=5,b=100:1e6"
+          - delay: 100ms
+          - logger.log: "emergency auto power off"
+          - output.turn_on: fast_off
 
   - platform: sdp3x
     id: dif_pressure
