@@ -16,6 +16,11 @@ esp32:
   framework:
     type: arduino
 
+globals:
+  - id: show_shutdown_banner
+    type: bool
+    initial_value: "false"
+
 # Enable logging
 logger:
   baud_rate: 0
@@ -143,13 +148,23 @@ binary_sensor:
     on_press:
       then:
         - rtttl.play: "feedback:d=4,o=5,b=100:32a4"
+    on_release:
+      then:
+        - lambda: id(show_shutdown_banner) = false;
     on_multi_click:
+      # Ordinary short click
       - timing:
           - ON for at most 1s
           - OFF for at least 0.1s
         then:
           - lambda: |-
               id(flow_meter_id).goto_next_state();
+      # Long power off click warning
+      - timing:
+          - ON for at least 1s
+        then:
+          - lambda: id(show_shutdown_banner) = true;
+      # Long power off click
       - timing:
           - ON for at least 3s
         then:
@@ -375,6 +390,16 @@ display:
             battery_percentage
           );
 
+          // Shutdown banner
+          if (id(show_shutdown_banner)) {
+            it.filled_rectangle(5, it.get_height() / 2 - 33, it.get_width() - 10, 66, id(color_banner_bg));
+            it.rectangle(5, it.get_height() / 2 - 33, it.get_width() - 10, 66, id(color_banner_border));
+            it.print(it.get_width() / 2, it.get_height() / 2 - 2, id(font_banner), id(color_white),
+                TextAlign::BOTTOM_CENTER, "Keep holding");
+            it.print(it.get_width() / 2, it.get_height() / 2 + 2, id(font_banner), id(color_white),
+                TextAlign::TOP_CENTER, "to power off");
+          }
+
 font:
   - file: "gfonts://Open+Sans"
     id: font_title
@@ -392,6 +417,10 @@ font:
     size: 20
     glyphs: '!"%()+=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz±?'
 
+  - file: "gfonts://Open+Sans"
+    id: font_banner
+    size: 14
+
 color:
   - id: color_grid
     hex: "6eb1f5"
@@ -403,3 +432,11 @@ color:
     hex: "c92508"
   - id: color_white
     hex: ffffff
+  - id: color_black
+    hex: "000000"
+  - id: color_red
+    hex: "FF0000"
+  - id: color_banner_bg
+    hex: "222222"
+  - id: color_banner_border
+    hex: "FF0000"
