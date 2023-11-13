@@ -72,6 +72,10 @@ To install precompiled firmware:
 2. Connect with USB cable
 3. Use https://web.esphome.io/ to prepare device for the first use and to flash the firmware
 
+## Usage
+
+![](imgs/dpm-usage.png)
+
 ## Development setup
 
 This paragraph contains instructions for development of the code and can be skipped if not relevant.
