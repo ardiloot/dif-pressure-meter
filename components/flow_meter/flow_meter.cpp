@@ -81,7 +81,7 @@ void FlowMeter::update(const float pressure) {
   }
 
   const float pressure_avg = pressure_stats_.average();
-  const float pressure_error = pressure_stats_.pop_stdev() / std::sqrt(float(pressure_stats_.count()));
+  const float pressure_error = 2.0f * pressure_stats_.pop_stdev() / std::sqrt(float(pressure_stats_.count()));
   const float flow_avg = active_valve().calc_flow(pressure_avg);
   const float flow_error = std::fabs(flow_avg - active_valve().calc_flow(pressure_avg + pressure_error));
 
