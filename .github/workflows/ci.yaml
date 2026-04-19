@@ -50,7 +50,7 @@ jobs:
 
       - name: Compile
         run: |
-          esphome compile dif-pressure-meter.yaml
+          uv run esphome compile dif-pressure-meter.yaml
 
       - name: "Move files"
         run: |
