@@ -2,13 +2,10 @@
 	"recommendations": [
         "ms-python.python",
         "ms-python.vscode-pylance",
-        "ms-python.pylint",
-        "ms-python.black-formatter",
+        "charliermarsh.ruff",
         "esphome.esphome-vscode",
-        "github.vscode-pull-request-github",
         "xaver.clang-format",
         "streetsidesoftware.code-spell-checker",
-        "ms-vscode.cpptools",
-        "ms-vscode.cpptools-extension-pack"
+        "ms-vscode.cpptools"
     ]
 }

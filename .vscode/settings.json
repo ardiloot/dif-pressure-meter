@@ -2,7 +2,11 @@
   "python.analysis.typeCheckingMode": "basic",
   "editor.formatOnSave": true,
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter"
+    "editor.defaultFormatter": "charliermarsh.ruff"
   },
-  "cSpell.words": ["datasheet", "poweroff"]
+  "cSpell.words": [
+    "airflow",
+    "datasheet",
+    "poweroff"
+  ]
 }
