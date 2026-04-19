@@ -1,62 +1,50 @@
 ---
 name: CI
-
-# yamllint disable-line rule:truthy
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
+
+permissions:
+  contents: read
 
 jobs:
   ci:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v6
+      - name: "Checkout"
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - name: Install uv
         uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-      - name: Set up Python
-        run: uv python install 3.14
-
-      - id: cache
-        name: Cache
-        uses: actions/cache@v5
-        with:
-          path: |
-            ~/.platformio
-          key: ${{ runner.os }}-platformio
-
       - name: Install requirements
         run: uv sync
-
       - name: Run pre-commit
         run: |
           uv run pre-commit run --all-files
-
       - name: Compile
         run: |
           uv run esphome compile dif-pressure-meter.yaml
-
       - name: "Move files"
         run: |
-          echo #
           mkdir dist
-          REF_NAME="${{github.ref_name}}"
+          VERSION=$(uv run python -c "from importlib.metadata import version; print(version('dif-pressure-meter'))")
           mv .esphome/build/dif-pressure-meter/.pioenvs/dif-pressure-meter/firmware.factory.bin \
-            "dist/dif-pressure-meter-${REF_NAME//\//-}.bin"
-
+            "dist/dif-pressure-meter-${VERSION}.bin"
       - name: "Upload"
         uses: actions/upload-artifact@v7
         with:
           name: dif-pressure-meter
           path: dist
-
       - name: Release
         uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          generate_release_notes: True
           files: |
             dist/*.bin
