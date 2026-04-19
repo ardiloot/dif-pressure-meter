@@ -56,8 +56,9 @@ jobs:
         run: |
           echo #
           mkdir dist
+          REF_NAME="${{github.ref_name}}"
           mv .esphome/build/dif-pressure-meter/.pioenvs/dif-pressure-meter/firmware.factory.bin \
-            dist/dif-pressure-meter-${{github.ref_name}}.bin
+            "dist/dif-pressure-meter-${REF_NAME//\//-}.bin"
 
       - name: "Upload"
         uses: actions/upload-artifact@v7
