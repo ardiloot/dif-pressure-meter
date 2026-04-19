@@ -1,5 +1,0 @@
-esphome
-pip-tools
-yamllint
-pylint
-black

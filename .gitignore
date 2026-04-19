@@ -7,3 +7,5 @@ secrets.yaml
 *.pyc
 imgs/original/
 resize.py
+*.egg-info
+

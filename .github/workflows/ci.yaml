@@ -18,11 +18,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
+          enable-cache: true
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
 
       - id: cache
         name: Cache
@@ -33,16 +34,15 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.python-version }}
 
       - name: Install requirements
-        run: |
-          pip install -r requirements.txt
+        run: uv sync
 
       - name: Run yamllint
         run: |
-          yamllint $(git ls-files '*.yaml')
+          uv run yamllint $(git ls-files '*.yaml')
 
       - name: Run pylint
         run: |
-          pylint $(git ls-files '*.py')
+          uv run pylint $(git ls-files '*.py')
 
       - name: Run clang-format
         run: |

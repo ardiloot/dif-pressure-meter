@@ -1,0 +1,22 @@
+[project]
+name = "dif-pressure-meter"
+dynamic = ["version"]
+description = "DIY handheld battery-powered differential pressure and air flow meter"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "esphome",
+    "pip-tools",
+    "yamllint",
+    "pylint",
+    "black",
+]
+
+[build-system]
+requires = ["setuptools>=64", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = []
+
+[tool.setuptools_scm]
