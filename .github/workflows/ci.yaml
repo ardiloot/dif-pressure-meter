@@ -4,6 +4,7 @@ name: CI
 # yamllint disable-line rule:truthy
 on:
   push:
+    branches: [main]
   pull_request:
 
 jobs:
@@ -16,16 +17,16 @@ jobs:
         python-version: ["3.11"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
 
       - id: cache
         name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: |
             ~/.platformio
@@ -45,7 +46,7 @@ jobs:
 
       - name: Run clang-format
         run: |
-          clang-format-13 --dry-run --Werror $(git ls-files '*.cpp' '*.h')
+          clang-format --dry-run --Werror $(git ls-files '*.cpp' '*.h')
 
       - name: Compile
         run: |
@@ -55,17 +56,18 @@ jobs:
         run: |
           echo #
           mkdir dist
-          mv .esphome/build/dif-pressure-meter/.pioenvs/dif-pressure-meter/firmware-factory.bin \
-            dist/dif-pressure-meter-${{github.ref_name}}.bin
+          REF_NAME="${{github.ref_name}}"
+          mv .esphome/build/dif-pressure-meter/.pioenvs/dif-pressure-meter/firmware.factory.bin \
+            "dist/dif-pressure-meter-${REF_NAME//\//-}.bin"
 
       - name: "Upload"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: dif-pressure-meter
           path: dist
 
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/')
         with:
           generate_release_notes: True
