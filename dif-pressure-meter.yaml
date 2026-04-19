@@ -310,7 +310,7 @@ spi:
 display:
   - platform: st7735
     id: display_id
-    model: "INITR_18BLACKTAB"
+    model: "INITR_GREENTAB"  # Update based on your specific display model
     reset_pin: GPIO4
     cs_pin: GPIO5
     dc_pin: GPIO2
