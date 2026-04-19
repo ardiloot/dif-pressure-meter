@@ -93,9 +93,13 @@ uv run esphome run dif-pressure-meter.yaml
 Lint checks:
 
 ```bash
-uv run yamllint $(git ls-files '*.yaml')
-uv run pylint $(git ls-files '*.py')
-clang-format-13 --dry-run --Werror $(git ls-files '*.cpp' '*.h')
+uv run pre-commit run --all-files
+```
+
+To enable automatic lint checks on every commit:
+
+```bash
+uv run pre-commit install
 ```
 
 If requirements change or need to be updated, run:

@@ -31,17 +31,9 @@ jobs:
       - name: Install requirements
         run: uv sync
 
-      - name: Run yamllint
+      - name: Run pre-commit
         run: |
-          uv run yamllint $(git ls-files '*.yaml')
-
-      - name: Run pylint
-        run: |
-          uv run pylint $(git ls-files '*.py')
-
-      - name: Run clang-format
-        run: |
-          clang-format --dry-run --Werror $(git ls-files '*.cpp' '*.h')
+          uv run pre-commit run --all-files
 
       - name: Compile
         run: |
