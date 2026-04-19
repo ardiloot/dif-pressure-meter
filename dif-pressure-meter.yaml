@@ -125,7 +125,7 @@ sensor:
     pin: GPIO34
     accuracy_decimals: 2
     update_interval: 1s
-    attenuation: 11dB
+    attenuation: 12dB
     filters:
       - multiply: 2.0 # The voltage divider requires us to multiply by 2
       - exponential_moving_average:
@@ -416,14 +416,17 @@ display:
           }
 
           // Debug
-          const float battery_percentage = 1e2f * std::min(1.0f,
-            std::max(0.0f, (id(battery_voltage).state - 3.7f) / (4.2f - 3.7f)));
-          it.printf(it.get_width() / 2, 160, id(font_valve), id(color_white),
-            TextAlign::BOTTOM_CENTER, "%.0fms, N=%d, %.0f%%",
-            id(loop_time).state,
-            sample_count,
-            battery_percentage
+          it.printf(0, 160, id(font_valve), id(color_white),
+            TextAlign::BOTTOM_LEFT, "N=%d",
+            sample_count
           );
+
+          // Battery voltage
+          const float battery_v = id(battery_voltage).state;
+          const auto battery_color = battery_v < 3.7f ?
+              id(color_red) : battery_v < 3.8f ? id(color_orange) : id(color_white);
+          it.printf(it.get_width(), 160, id(font_valve), battery_color,
+            TextAlign::BOTTOM_RIGHT, "BAT=%.2fV", battery_v);
 
           // Shutdown banner
           if (id(show_shutdown_banner)) {
@@ -471,6 +474,8 @@ color:
     hex: "000000"
   - id: color_red
     hex: "FF0000"
+  - id: color_orange
+    hex: "FFA500"
   - id: color_banner_bg
     hex: "222222"
   - id: color_banner_border
