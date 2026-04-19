@@ -56,7 +56,7 @@ jobs:
         run: |
           echo #
           mkdir dist
-          mv .esphome/build/dif-pressure-meter/.pioenvs/dif-pressure-meter/firmware-factory.bin \
+          mv .esphome/build/dif-pressure-meter/.pioenvs/dif-pressure-meter/firmware.factory.bin \
             dist/dif-pressure-meter-${{github.ref_name}}.bin
 
       - name: "Upload"
