@@ -319,7 +319,7 @@ display:
       width: 128
       height: 160
       offset_width: 2
-      offset_height: 0
+      offset_height: 1
     color_order: rgb
     buffer_size: 100%
     update_interval: 166ms
@@ -382,9 +382,9 @@ display:
           // Average values
           const auto state = id(flow_meter_id)->get_state();
           const auto sample_count = id(flow_meter_id).get_sample_count();
-          const auto avg_value_color = 
-              state == flow_meter::State::AVERAGING ? id(color_averaging) : 
-              state == flow_meter::State::STOPPED ? id(color_stopped) : 
+          const auto avg_value_color =
+              state == flow_meter::State::AVERAGING ? id(color_averaging) :
+              state == flow_meter::State::STOPPED ? id(color_stopped) :
               id(color_white);
           const bool has_average = state != flow_meter::State::IDLE && sample_count >= 2;
           {

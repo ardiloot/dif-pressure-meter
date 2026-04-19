@@ -3,13 +3,15 @@ name = "dif-pressure-meter"
 dynamic = ["version"]
 description = "DIY handheld battery-powered differential pressure and air flow meter"
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.14"
+authors = [
+    { name = "Ardi Loot" },
+]
 dependencies = [
     "esphome",
-    "pip-tools",
-    "yamllint",
-    "pylint",
-    "black",
+    "pre-commit",
+    "pre-commit-uv",
 ]
 
 [build-system]
