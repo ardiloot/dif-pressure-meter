@@ -308,18 +308,20 @@ spi:
   interface: hardware
 
 display:
-  - platform: st7735
+  - platform: mipi_spi
     id: display_id
-    model: "INITR_GREENTAB"  # Update based on your specific display model
+    model: ST7735
     reset_pin: GPIO4
     cs_pin: GPIO5
     dc_pin: GPIO2
-    rotation: 180
-    device_width: 128
-    device_height: 160
-    col_start: 0
-    row_start: 0
-    eight_bit_color: false # false is faster
+    rotation: 0
+    dimensions:
+      width: 128
+      height: 160
+      offset_width: 2
+      offset_height: 0
+    color_order: rgb
+    buffer_size: 100%
     update_interval: 166ms
     data_rate: 40MHz
 

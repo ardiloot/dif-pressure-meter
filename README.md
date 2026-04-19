@@ -41,7 +41,7 @@ For details see:
 
 The mechanical design is done using Onshape: [project files](https://cad.onshape.com/documents/3a0444f7efaf570fd867d2e7/w/0f2dabb567175f38ff258f90/e/ec28925e598c09357985fe26?renderMode=0&uiState=655145dc99c22b680c1f923b). The case is mostly 3D printed:
 1. Front ([STL](mech/front.stl))
-2. Back ([STL](mech/front.stl))
+2. Back ([STL](mech/back.stl))
 3. Screen spacers ([STL](mech/spacer.stl))
 4. 1 mm thick Plexiglass for screen protection (37 mm x 50 mm)
 5. M2x5 screws for screen mounting
@@ -84,31 +84,23 @@ Most of the usage is explained in the image. Some (hidden) features:
 
 This paragraph contains instructions for development of the code and can be skipped if not relevant.
 
-To begin, create virtual environment (Python 3.11), activate and install requirements:
-
-```bash
-python -m venv venv
-source venv/bin/activate # or on Windows: .\venv\Scripts\activate
-pip install -r requirements.txt
-```
-
 To compile and upload firmware, run:
 
 ```bash
-esphome run dif-pressure-meter.yaml
+uv run esphome run dif-pressure-meter.yaml
 ```
 
 Lint checks:
 
 ```bash
-yamllint $(git ls-files '*.yaml')
-pylint $(git ls-files '*.py')
+uv run yamllint $(git ls-files '*.yaml')
+uv run pylint $(git ls-files '*.py')
 clang-format-13 --dry-run --Werror $(git ls-files '*.cpp' '*.h')
 ```
 
 If requirements change or need to be updated, run:
 
 ```bash
-pip-compile --upgrade -o requirements.txt requirements.in
-pip-sync
+uv lock --upgrade
+uv sync
 ```

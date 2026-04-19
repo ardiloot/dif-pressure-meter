@@ -9,20 +9,16 @@ on:
 
 jobs:
   ci:
-    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        python-version: ["3.11"]
 
     steps:
       - uses: actions/checkout@v6
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
+          enable-cache: true
+      - name: Set up Python
+        run: uv python install 3.14
 
       - id: cache
         name: Cache
@@ -30,19 +26,18 @@ jobs:
         with:
           path: |
             ~/.platformio
-          key: ${{ runner.os }}-${{ matrix.python-version }}
+          key: ${{ runner.os }}-platformio
 
       - name: Install requirements
-        run: |
-          pip install -r requirements.txt
+        run: uv sync
 
       - name: Run yamllint
         run: |
-          yamllint $(git ls-files '*.yaml')
+          uv run yamllint $(git ls-files '*.yaml')
 
       - name: Run pylint
         run: |
-          pylint $(git ls-files '*.py')
+          uv run pylint $(git ls-files '*.py')
 
       - name: Run clang-format
         run: |
@@ -50,7 +45,7 @@ jobs:
 
       - name: Compile
         run: |
-          esphome compile dif-pressure-meter.yaml
+          uv run esphome compile dif-pressure-meter.yaml
 
       - name: "Move files"
         run: |
