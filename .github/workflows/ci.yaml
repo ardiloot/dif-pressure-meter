@@ -4,6 +4,7 @@ name: CI
 # yamllint disable-line rule:truthy
 on:
   push:
+    branches: [main]
   pull_request:
 
 jobs:
@@ -45,7 +46,7 @@ jobs:
 
       - name: Run clang-format
         run: |
-          clang-format-13 --dry-run --Werror $(git ls-files '*.cpp' '*.h')
+          clang-format --dry-run --Werror $(git ls-files '*.cpp' '*.h')
 
       - name: Compile
         run: |
