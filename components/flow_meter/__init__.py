@@ -64,4 +64,4 @@ async def to_code(config):
             )
         cg.add(hub.add_valve_type(vt))
 
-    cg.add_library("robtillaart/Statistic", "1.0.5")
+    cg.add_library("robtillaart/Statistic", "1.0.9")
