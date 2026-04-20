@@ -204,6 +204,8 @@ binary_sensor:
         input: true
         pullup: true
       inverted: true
+    filters:
+      - delayed_on: 20ms
     on_press:
       then:
         - rtttl.play: "feedback:d=4,o=5,b=100:32a4"
@@ -218,6 +220,8 @@ binary_sensor:
         input: true
         pullup: true
       inverted: true
+    filters:
+      - delayed_on: 20ms
     on_press:
       then:
         - rtttl.play: "feedback:d=4,o=5,b=100:32a4"
@@ -232,6 +236,8 @@ binary_sensor:
         input: true
         pullup: true
       inverted: true
+    filters:
+      - delayed_on: 20ms
     on_press:
       then:
         - lambda: |-
@@ -258,6 +264,8 @@ binary_sensor:
         input: true
         pullup: true
       inverted: true
+    filters:
+      - delayed_on: 20ms
     on_press:
       then:
         - lambda: |-
